@@ -225,9 +225,10 @@ final class SchemaManager extends PostgreSQLSchemaManager
             return;
         }
 
-        $info = match ($column->getType()::class) {
-            GeometryType::class => $this->getGeometrySpatialColumnInfo($tableName, $column->getName()),
-            GeographyType::class => $this->getGeographySpatialColumnInfo($tableName, $column->getName()),
+        $type = $column->getType();
+        $info = match (true) {
+            $type instanceof GeometryType => $this->getGeometrySpatialColumnInfo($tableName, $column->getName()),
+            $type instanceof GeographyType => $this->getGeographySpatialColumnInfo($tableName, $column->getName()),
             default => null,
         };
 
